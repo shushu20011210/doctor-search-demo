@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>医师执业信息查询｜教学演示</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f5f7fa;color:#333;font-family:-apple-system,BlinkMacSystemFont,"Microsoft YaHei",sans-serif}
+header{background:white;text-align:center;padding:26px 15px;border-bottom:3px solid #2874e8}
+header h1{font-size:23px;margin:8px 0}
+header p{font-size:12px;color:#777}
+main{max-width:600px;margin:auto;padding:22px}
+.card{background:white;border-radius:12px;padding:22px 18px;box-shadow:0 3px 15px #0000000a}
+label{display:block;font-weight:bold;margin:20px 0 10px}
+label b{color:#e34b55}
+input,select{width:100%;height:48px;border:1px solid #d5d9df;border-radius:5px;padding:10px;font-size:16px;background:white}
+small{display:block;color:#888;margin-top:8px}
+button{border:0;border-radius:5px;cursor:pointer}
+.primary{width:100%;background:#285af2;color:white;font-size:19px;font-weight:bold;padding:15px;margin-top:26px}
+.captcha{display:flex;align-items:center;gap:12px;margin-top:8px}
+.captcha span{flex:1;background:#d9f1eb;padding:15px;text-align:center;font-size:24px;letter-spacing:6px;color:#197b77;font-weight:bold}
+.captcha button{padding:15px;background:#e9eef7}
+.notice{background:#fff5dc;padding:12px;border-radius:6px;font-size:13px;color:#795d18;margin-bottom:18px}
+#result{display:none;margin-top:20px}
+.result-row{padding:12px 0;border-bottom:1px solid #eee;line-height:1.6}
+.result-row strong{color:#1870ae}
+.tag{font-size:12px;color:#777;text-align:center;margin:20px}
+</style>
+</head>
+<body>
+<header>
+<h1>医师执业注册信息查询</h1>
+<p>Dr.test recllocm.caa.ha</p>
+<p>非官方教学演示系统</p>
+</header>
+<main>
+<div class="notice">本网站仅用于教学演示，不连接政府数据库，不提供真实医师资格核验。</div>
+<div class="card">
+<h2>医师信息查询</h2>
+<label><b>*</b> 所在省份</label>
+<select id="province">
+<option value="">请选择所在省份</option>
+<option>台湾省</option>
+<option>广东省</option>
+<option>北京市</option>
+<option>上海市</option>
+<option>浙江省</option>
+<option>江苏省</option>
+</select>
+<label><b>*</b> 医师姓名</label>
+<input id="name" placeholder="请输入医师姓名">
+<small>注：请输入全名</small>
+<label><b>*</b> 所在医疗机构</label>
+<input id="hospital" placeholder="请输入所在医疗机构">
+<label><b>*</b> 验证码</label>
+<div class="captcha">
+<span id="code"></span>
+<button onclick="refreshCode()">刷新</button>
+</div>
+<input id="answer" placeholder="请输入上方验证码" style="margin-top:12px">
+<button class="primary" onclick="searchDoctor()">查 询</button>
+</div>
+<div id="result" class="card">
+<h2>查询结果</h2>
+<div class="notice">教学示例资料，未经官方核验，不构成执业资格证明。</div>
+<div id="details"></div>
+</div>
+<p class="tag">Dr.test recllocm.caa.ha · 教学演示 · 非官方网站</p>
+</main>
+<script>
+let captcha="";
+function refreshCode(){
+captcha=String(Math.floor(1000+Math.random()*9000));
+document.getElementById("code").textContent=captcha;
+}
+function searchDoctor(){
+const p=document.getElementById("province").value;
+const n=document.getElementById("name").value.trim();
+const h=document.getElementById("hospital").value.trim();
+const a=document.getElementById("answer").value.trim();
+if(!p||!n||!h){alert("请填写所有必填信息");return}
+if(a!==captcha){alert("验证码错误，请重新输入");refreshCode();return}
+const result=document.getElementById("result");
+const details=document.getElementById("details");
+details.replaceChildren();
+const fields=[
+["姓名",n],
+["所在省份",p],
+["医疗机构",h],
+["查询状态","仅展示用户输入的信息"],
+["资料来源","教学模拟，非官方数据库"]
+];
+fields.forEach(([label,value])=>{
+const row=document.createElement("div");
+row.className="result-row";
+const strong=document.createElement("strong");
+strong.textContent=label+"：";
+row.append(strong,document.createTextNode(value));
+details.appendChild(row);
+});
+result.style.display="block";
+result.scrollIntoView({behavior:"smooth"});
+refreshCode();
+}
+refreshCode();
+</script>
+</body>
+</html>
